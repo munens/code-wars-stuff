@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 /* 1st attempt:
 import (
@@ -66,10 +69,6 @@ func main() {
 
 /* 2nd attempt */
 
-func filter(compare []int, current []int) {
-
-}
-
 func concat(curr []int, next[][]int) []int {
 
 	if len(next) == 0 {
@@ -88,6 +87,11 @@ func reverse(arr []int) (rev []int ) {
 }
 
 func sort(arr [][]int) []int {
+
+	if len(arr[0]) == 1 {
+		return arr[0]
+	}
+
 	firstRow := arr[0]
 
 	var middleRows [][]int
@@ -121,17 +125,22 @@ func sort(arr [][]int) []int {
 
 func snail(arr [][]int, index int, acc []int, size int) []int {
 
-	currArr := arr[index:len(arr) - index]
+	max := int(math.Floor(float64(len(arr) / 2)))
+	start := index
+
+	if start > max {
+		start = max
+	}
+
+	currArr := arr[start:len(arr) - index]
 
 	if index > 0 {
 		var nestArr [][]int
 		for _, v := range currArr {
-			nestArr = append(nestArr, v[index:len(v) - index])
+			nestArr = append(nestArr, v[start:len(v) - index])
 		}
 		currArr = nestArr
 	}
-	fmt.Println(acc)
-
 
 	if len(acc) < size {
 		curr := sort(currArr)
@@ -141,28 +150,63 @@ func snail(arr [][]int, index int, acc []int, size int) []int {
 	return acc
 }
 
-func SnailSort(arr [][]int) {
+func SnailSort(arr [][]int) []int {
 	size := len(arr) * len(arr[0])
-	snail(arr, 0, []int{}, size)
+	return snail(arr, 0, []int{}, size)
 }
 
 func main() {
-	arr := [][]int{
+
+	fmt.Println("0 x 0 =>", SnailSort([][]int{{}}))
+
+	arr0 := [][]int{
+		{1},
+	}
+
+	fmt.Println("1 x 1 =>", SnailSort(arr0))
+
+	arr1 := [][]int{
+		{1, 2},
+		{3, 4},
+	}
+
+	fmt.Println("2 x 2 =>", SnailSort(arr1))
+
+	arr2 := [][]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+
+	fmt.Println("3 x 3 =>", SnailSort(arr2))
+
+	arr3 := [][]int{
 		{1, 2, 3, 4},
 		{5, 6, 7, 8},
 		{9, 10, 11, 12},
 		{13, 14, 15, 16},
 	}
 
-	SnailSort(arr)
+	fmt.Println("4 x 4 =>", SnailSort(arr3))
 
-	arr2 := [][]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
+	arr4 := [][]int{
+		{1,   2,  3,  4,  5,  6},
+		{7,   8,  9, 10, 11, 12},
+		{13, 14, 15, 16, 17, 18},
+		{19, 20, 21, 22, 23, 24},
+		{25, 26, 27, 28, 29, 30},
+		{31, 32, 33, 34, 35, 36},
+	}
+
+	fmt.Println("6 x 6 =>", SnailSort(arr4))
+
+	arr5 := [][]int{
+		{ 1,  2,  3,  4, 5},
+		{ 6,  7,  8,  9, 10},
 		{11, 12, 13, 14, 15},
 		{16, 17, 18, 19, 20},
 		{21, 22, 23, 24, 25},
 	}
 
-	SnailSort(arr2)
+	fmt.Println("5 x 5 =>", SnailSort(arr5))
 }
